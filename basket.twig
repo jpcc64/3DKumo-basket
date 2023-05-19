@@ -1,0 +1,59 @@
+{% extends 'base-tmpl.twig' %}
+
+{% block head_js_extra %}
+  {% include 'basket.js.twig' %}  
+ 
+{% endblock %}
+{% block page_id %}basket{% endblock %}
+{% block main_content %}
+   {# <pre>{{ dump(data) }}</pre> #}
+
+  <div class='page-wrap'>
+    {% set noResults = (data.basketOrders|length == 0) %}
+	<section id='orders-link' style='margin-left:10px;float:left;'>			
+		{% set historyUrl = 'basket/orders/' ~  data.userID   %}
+	</section>	
+    <section class='basket-area {{ noResults ? 'd-none' }}'>
+      <div class='container'>
+        <div class='row'>
+          <div class='col-md-6 offset-md-3 mt-2'>
+            <h1><span class="glyphicon glyphicon-shopping-cart"></span></h1>
+            <div class='login-box'>
+              <div id='basketorders' class='basketorders'>
+                {% for basketOrder in data.basketOrders %}
+                  <div class='basketorder'>
+                    {% include 'basketorder-card-tmpl.twig' %}
+                  </div>             
+                {% endfor %}
+              </div>
+              <br />
+			{% if data.deliveryTypes != false %}
+			 <div class="form-group" style="width:45%;">
+				<label for="sel">Select delivery method:</label>				
+				<select class="form-control" id="sel" style="font-size:11px;text-align-last: right" onchange="updateCosts()" name="deliverySelect" >
+				{% for type in data.deliveryTypes %}
+					<option value= {{ type.delivery_type_id }} >{{ type.description}} {{ type.price}} euro</option>
+				{% endfor %}											
+				</select>				
+			  </div>
+			{% endif %}			 
+				{% embed 'basket-tmpl.twig' %}
+					{% block basket_tmpl %}{% endblock %}
+				{% endembed %}
+			<div class="center" style="clear:both">                 
+				<a href="{{ data.baseUrl }}basket/payment"><button id="" type="submit" class="btn btn-default" style="margin-top:25px">Pay securely now</button></a>
+            </div>
+           </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class='no-results {{ noResults ?: 'd-none' }}'>
+      <div class="jumbotron">
+        <div class="container">
+          <p>Your basket is still empty</p>
+        </div>
+      </div>
+    </section>
+  </div> 
+{% endblock %}

@@ -1,0 +1,64 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+
+$(document).ready(function(){
+        $(".deleteorder").click(deleteModel);
+});
+
+  function deleteModel() {
+    $.ajax({
+        async: false,
+        url: '{{ base_url('api/order')}}',
+        type: 'DELETE',
+        data : {orderitemid: $(this).attr('order-item-id')},
+      success: function(data){       
+	    window.location.href = '{{ base_url('basket')}}';
+      },
+      error: function(data){	  
+		window.location.href = '{{ base_url('basket')}}';	  
+		console.log('XHR failed: ' + textStatus)
+        console.log('Response: ' + jqXHR.responseText)
+        console.log(data)
+      }
+    }); 
+  }
+  
+	 var code = "";	
+	 
+	 function enterCode(){
+		code = document.getElementById("code").value;
+		updateCosts();
+	 }
+	
+	 function updateCosts(){
+		var deliveryMode;
+		if (document.getElementById("sel"))
+			deliveryMode = document.getElementById("sel").value;		
+		var purchase = 0;
+		var	orders = {{ data.basketOrders |json_encode|raw }};		
+		for (var i = 0; i < orders.length; i++){
+		  purchase += parseInt(orders[i].price);
+		}		
+		var formData = new FormData();
+		if (code)
+			formData.append("code", code);
+		formData.append("purchase", purchase);
+		if (deliveryMode)
+			formData.append("deliveryMode", deliveryMode);
+		$.ajax({                
+				url: "{{ data.baseUrl }}basket/updateCosts",				
+				type: 'POST',
+				cache: false,
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function(response) {	
+				$('#price').html(response);
+				  },
+				error: function(jqXHR, textStatus, errorMessage) {
+					  console.log(errorMessage); // Optional
+				  }
+			  });							
+		}
+</script>

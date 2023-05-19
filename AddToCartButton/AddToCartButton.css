@@ -1,0 +1,36 @@
+.button {
+    cursor: pointer;
+    font-weight: 400;
+    background-color: #4eb6eb ;
+    border-radius: 15px;
+    padding: 4px 25px;
+    font-size: 16px;
+    color: #fff;
+    width: 165px;
+    height: 30px;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .ready {
+    composes: button;
+  }
+  
+  .ready:hover {
+    background-color: #1585be;
+  }
+  
+   .disabled {
+    composes: button;
+  
+    background-color: #cccccc;
+  } 
+  
+  .disabled:hover {
+    background-color: #808080;
+  }
+  
+  .icon {
+    top: 2px;
+  }
+  
